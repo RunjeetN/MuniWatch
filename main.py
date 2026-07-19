@@ -1,4 +1,4 @@
-import requests 
+import requests
 import json
 from datetime import datetime, timezone
 from dateutil.parser import isoparse
@@ -6,10 +6,10 @@ from math import floor
 from collections import defaultdict
 
 # setup API
-api_token = "fe08bdf9-b21c-42d4-ad23-603f2ef284ef"
-agency_id = "SF"
-eastbound_stopcode = 15419
-westbound_stopcode = 16996
+API_TOKEN = "fe08bdf9-b21c-42d4-ad23-603f2ef284ef"
+AGENCY = "SF"
+EASTBOUND_STOPCODE = 15419
+WESTBOUND_STOPCODE = 16996
 
 
 response = requests.get(f'http://api.511.org/transit/StopMonitoring?api_key={api_token}&agency={agency_id}&stopcode={eastbound_stopcode}&format=json')
