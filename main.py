@@ -8,17 +8,23 @@ import requests
 import json
 
 
-response = requests.get(f'http://api.511.org/transit/StopMonitoring?api_key={api_token}&agency={agency_id}&format=json')
+response = requests.get(f'http://api.511.org/transit/StopMonitoring?api_key={api_token}&agency={agency_id}&stopcode={eastbound_stopcode}&format=json')
 
-data = json.loads(response.content.decode('utf-8-sig'))
 
-visits = (data["ServiceDelivery"]
-              ["StopMonitoringDelivery"]
-              ["MonitoredStopVisit"])   # this is a list
 
-for v in visits:
-    journey = v["MonitoredVehicleJourney"]
-    line = journey["LineRef"]                                  # e.g. "J"
-    arrival = journey["MonitoredCall"]["ExpectedArrivalTime"]
-    print(f'journey: {journey}\nline: {line}\narrival: {arrival}')
+def getLineInfo(stopcode: int) -> None:
+    res = []
+    data = json.loads(response.content.decode('utf-8-sig'))
 
+    lines = data["ServiceDelivery"]["StopMonitoringDelivery"]["MonitoredStopVisit"]
+    for entry in lines:
+        journeyInfo = entry["MonitoredVehicleJourney"]
+        expected_arrival_time = entry["MonitoredVehicleJourney"]["MonitoredCall"]["ExpectedArrivalTime"]
+        line_name = journeyInfo["LineRef"]
+        res.append([line_name, expected_arrival_time])
+    return res 
+    #print(json.dumps(line, indent=4))
+
+
+east_bound_info = getLineInfo(eastbound_stopcode)
+print(east_bound_info)
