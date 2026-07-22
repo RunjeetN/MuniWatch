@@ -7,7 +7,7 @@ from collections import defaultdict, deque
 import pandas as pd
 import streamlit as st
 
-# setup API
+
 API_TOKEN = "fe08bdf9-b21c-42d4-ad23-603f2ef284ef"
 AGENCY = "SF"
 EASTBOUND_STOPCODE = 15419
@@ -36,13 +36,15 @@ def getLineInfo(stopcode: int) -> defaultdict:
         res[line_name].append(calc_minutes_to_arrival(expected_arrival_time))
     return res 
 
-# convert API dictioanry data to nested list
-# example row: (N': [0, 17, 29])
-# parent: eastbound or westbound containers 
-def build_row(row: tuple, parent, unique_key:str):
+def build_row(row_data: tuple, parent, unique_key:str):
+    """
+    create and populate row container
+    example row_data: ('N': [0, 17, 29])
+    parent: eastbound or westbound containers 
+    """
     image_col, value1_col, value2_col, value3_col = parent.columns([1.5, 1, 1, 1])
     
-    line, times = row
+    line, times = row_data
     with image_col:
         st.button(line, key=unique_key+line)
             
