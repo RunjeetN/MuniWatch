@@ -12,7 +12,16 @@ API_TOKEN = "fe08bdf9-b21c-42d4-ad23-603f2ef284ef"
 AGENCY = "SF"
 EASTBOUND_STOPCODE = 15419
 WESTBOUND_STOPCODE = 16996
-
+IMAGE_PATH_MAPPINGS = {'J': 'assets/J_Church_logo.svg', 
+                       'Van Ness': 'assets/BSicon_BUS3.svg',
+                       'E': 'assets/E_Embarcadero_logo.svg',
+                       'F': 'assets/F_Market_&_Wharves_logo.svg',
+                       'K': 'assets/K_Ingleside_logo.svg',
+                       'M': 'assets/M_Ocean_View_logo.svg',
+                       'N': 'assets/N_Judah_logo.svg',
+                       'S': 'assets/S_Shuttle_logo.svg',
+                       'T': 'assets/T_Third_Street_logo.svg',
+                       'L': 'assets/L_Taraval_logo.svg'}
 
 
 def calc_minutes_to_arrival(arrival_time: str) -> int:
@@ -36,6 +45,12 @@ def getLineInfo(stopcode: int) -> defaultdict:
         res[line_name].append(calc_minutes_to_arrival(expected_arrival_time))
     return res 
 
+def big(n):
+    st.markdown(
+        f"<p style='font-size:64px; font-weight:700; text-align:center; margin:0'>{n}</p>",
+        unsafe_allow_html=True,
+    )
+
 def build_row(row_data: tuple, parent, unique_key:str):
     """
     create and populate row container
@@ -46,16 +61,12 @@ def build_row(row_data: tuple, parent, unique_key:str):
     
     line, times = row_data
     with image_col:
-        st.button(line, key=unique_key+line)
+        st.image(image=IMAGE_PATH_MAPPINGS[line])
             
-    with value1_col:
-        st.write(times[0])
-
-    with value2_col:
-        st.write(times[1])
-
-    with value3_col:
-        st.write(times[2])
+    cols = [value1_col, value2_col, value3_col]
+    for col, t in zip(cols, times):
+        with col:
+            big(t)
     
 def build_table(data: defaultdict, parent_container, key:str):
     with parent_container:
@@ -63,13 +74,18 @@ def build_table(data: defaultdict, parent_container, key:str):
     for row in data.items():
         build_row(row, parent_container, key)
 
-eastbound_info = getLineInfo(EASTBOUND_STOPCODE)
-westbound_info = getLineInfo(WESTBOUND_STOPCODE)
+def run():
+    st.set_page_config(layout="wide")
+
+    eastbound_info = getLineInfo(EASTBOUND_STOPCODE)
+    westbound_info = getLineInfo(WESTBOUND_STOPCODE)
+
+    with st.container(border=True, horizontal=True, width="stretch"):
+        # eastbound
+        build_table(eastbound_info, st.container(border=True, width="stretch", horizontal_alignment="center", vertical_alignment="center"), key="East")
+        # westbound 
+        build_table(westbound_info, st.container(border=True, width="stretch", horizontal_alignment="center", vertical_alignment="center"), key="West")
 
 
-with st.container(border=True, horizontal=True):
-    # eastbound
-    build_table(eastbound_info, st.container(border=True), key="East")
-    # westbound 
-    build_table(westbound_info, st.container(border=True), key="West")
 
+run()
