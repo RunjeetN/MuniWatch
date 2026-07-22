@@ -40,7 +40,7 @@ def getLineInfo(stopcode: int) -> defaultdict:
 # example row: (N': [0, 17, 29])
 # parent: eastbound or westbound containers 
 def build_row(row: tuple, parent, unique_key:str):
-    image_col, value1_col, value2_col, value3_col = parent.columns([1, 2, 2, 2])
+    image_col, value1_col, value2_col, value3_col = parent.columns([1.5, 1, 1, 1])
     
     line, times = row
     with image_col:
@@ -56,6 +56,8 @@ def build_row(row: tuple, parent, unique_key:str):
         st.write(times[2])
     
 def build_table(data: defaultdict, parent_container, key:str):
+    with parent_container:
+        st.title(key, text_alignment="center")
     for row in data.items():
         build_row(row, parent_container, key)
 
@@ -65,7 +67,7 @@ westbound_info = getLineInfo(WESTBOUND_STOPCODE)
 
 with st.container(border=True, horizontal=True):
     # eastbound
-    build_table(eastbound_info, st.container(border=True), key="east")
+    build_table(eastbound_info, st.container(border=True), key="East")
     # westbound 
-    build_table(westbound_info, st.container(border=True), key="west")
+    build_table(westbound_info, st.container(border=True), key="West")
 
