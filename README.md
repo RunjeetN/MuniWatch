@@ -60,31 +60,3 @@ WESTBOUND_STOPCODE = 16996
 
 To track different stops, replace these with the stop codes you want. Stop codes can be looked up through the 511 API or on stop signage.
 
-## Deployment (Streamlit Community Cloud)
-
-1. Push this repo to GitHub.
-2. Go to [share.streamlit.io](https://share.streamlit.io), sign in with GitHub, and click **New app**.
-3. Select the repo, branch, and `muni_board.py` as the entry point, then deploy.
-4. Add your token under the app's **Settings → Secrets**:
-
-   ```toml
-   SF511_API_TOKEN = "your-token-here"
-   ```
-
-   Read it in code with `st.secrets["SF511_API_TOKEN"]`, or keep the existing `os.getenv` fallback and set it as an environment variable in the same settings panel.
-
-5. (Optional) Under **Settings → General**, rename the subdomain to get a cleaner URL like `muni-board.streamlit.app`.
-
-## Notes
-
-- The `assets/` folder must be committed to the repo for the line logos to render.
-- Keep your API token out of version control. If it has ever been committed, rotate it.
-
-## Dependencies
-
-```
-streamlit
-streamlit-autorefresh
-requests
-python-dateutil
-```
