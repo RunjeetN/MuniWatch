@@ -6,6 +6,7 @@ from math import floor
 from collections import defaultdict, deque
 import pandas as pd
 import streamlit as st
+from streamlit_autorefresh import st_autorefresh
 
 
 API_TOKEN = "fe08bdf9-b21c-42d4-ad23-603f2ef284ef"
@@ -76,6 +77,7 @@ def build_table(data: defaultdict, parent_container, key:str):
 
 def run():
     st.set_page_config(layout="wide")
+    st_autorefresh(interval=180_000, key="refresh")  # 120,000 ms = 2 min
 
     eastbound_info = getLineInfo(EASTBOUND_STOPCODE)
     westbound_info = getLineInfo(WESTBOUND_STOPCODE)
